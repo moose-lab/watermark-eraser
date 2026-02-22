@@ -47,6 +47,35 @@ python watermark-eraser/src/batch_processor.py \
 
 ---
 
+## 本地部署 (Local Deployment for Agents)
+
+**For advanced users who want to pre-install the skill in their local environment.**
+
+### 1. One-Step Installation
+
+Run this command to clone the repository and install all dependencies:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/moose-lab/watermark-eraser/main/install.sh)"
+```
+
+This will:
+- Clone the repository to `/home/ubuntu/skills/watermark-eraser`.
+- Install all necessary Python packages.
+- Download the LaMa model.
+
+### 2. Instruct Your Agent
+
+Once installed, you can instruct your agent to use the local skill:
+
+> "Use the local `watermark-remover` skill to process the images in `/input/dir/` and save them to `/output/dir/`."
+
+### 3. Manual Installation
+
+For detailed steps, see the [Local Deployment Guide](docs/LOCAL_DEPLOYMENT.md).
+
+---
+
 ## ✨ Key Features
 
 -   **100% Coverage V3 Detector**: A custom-built, three-stage detector that guarantees every pixel of the target watermark is identified.
@@ -116,6 +145,7 @@ python src/batch_processor.py \
 
 ## 📚 Documentation
 
+-   **[Local Deployment Guide](docs/LOCAL_DEPLOYMENT.md)**: Step-by-step instructions for setting up the skill locally.
 -   **[Architecture](docs/ARCHITECTURE.md)**: A detailed look at the system components and data flow.
 -   **[Development History](docs/DEVELOPMENT.md)**: The story of how the V3 detector was built.
 -   **[Examples](examples/)**: Basic and advanced usage scripts.
