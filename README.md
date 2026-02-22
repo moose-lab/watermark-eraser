@@ -5,9 +5,47 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
 
-This tool automatically detects and erases watermarks from images with pixel-perfect precision. It was specifically designed to handle the consistent watermarks added by online editors, but can be adapted for other types.
+This tool automatically detects and erases watermarks from images with pixel-perfect precision. It can be used as a standalone Python project or as a **Manus Skill** for direct integration with Code Agents.
 
 ![Comparison](docs/images/comparison.png)
+
+---
+
+## 🚀 **Usage with Code Agents (Manus Skill)**
+
+**This is the recommended way to use the tool for automated, large-scale processing.** A Code Agent can directly use this repository as a skill to process images.
+
+### How It Works
+
+1.  **Provide the GitHub URL**: Give the agent the URL to this repository: `https://github.com/moose-lab/watermark-eraser.git`
+2.  **Assign the Task**: Instruct the agent to process a directory of images.
+
+### Example Prompt for a Code Agent
+
+> "Use the skill from `https://github.com/moose-lab/watermark-eraser.git` to remove the watermarks from all images in the `/path/to/my/images` directory. Save the clean images to `/path/to/my/output`."
+
+### Agent Workflow
+
+The agent will automatically perform the following steps:
+
+1.  **Clone the Repository**: `git clone https://github.com/moose-lab/watermark-eraser.git`
+2.  **Install Dependencies**: `pip install -r requirements.txt`
+3.  **Execute Batch Processing**: Run the `batch_processor.py` script with the specified input and output directories.
+
+```bash
+# Agent will run this command
+python watermark-eraser/src/batch_processor.py \
+  --input /path/to/my/images/ \
+  --output /path/to/my/output/ \
+  --batch
+```
+
+4.  **Deliver Results**: The agent will provide a link to the output directory containing:
+    -   Clean, watermark-free images.
+    -   A detailed `processing_report.json`.
+    -   An `output_files.txt` list for easy integration.
+
+---
 
 ## ✨ Key Features
 
@@ -17,9 +55,10 @@ This tool automatically detects and erases watermarks from images with pixel-per
 -   **Batch Processing**: Process entire directories of images with a single command.
 -   **Detailed Reporting**: Generates a JSON report with statistics for each image, including mask coverage and processing time.
 -   **GPU Acceleration**: Supports CUDA and MPS for significantly faster processing.
--   **Extensible**: Easily adaptable to different types of watermarks by tuning detection parameters.
 
-## 🚀 Quick Start
+## 🛠️ Standalone Usage
+
+For local development or integration into non-agent workflows.
 
 ### 1. Installation
 
@@ -51,7 +90,7 @@ python src/batch_processor.py \
   --batch
 ```
 
-## 🔧 Advanced Usage
+## 🔧 Advanced Options
 
 ### GPU Acceleration
 
@@ -60,9 +99,6 @@ Use the `--device` flag to specify a processing device (`cuda`, `mps`, or `cpu`)
 ```bash
 # Use NVIDIA GPU
 python src/batch_processor.py --batch --device cuda ...
-
-# Use Apple Silicon GPU
-python src/batch_processor.py --batch --device mps ...
 ```
 
 ### Quality Assurance
@@ -78,24 +114,10 @@ python src/batch_processor.py \
   --visualize
 ```
 
-This will generate:
--   `*_mask.png`: The binary mask used for inpainting.
--   `*_detection.png`: A visualization with the detected watermark highlighted in red.
-
-## 🛠️ How It Works: The V3 Detector
-
-The key to this tool is the `CompleteWatermarkDetector`, which uses a three-stage strategy to achieve 100% mask coverage.
-
-1.  **Direct Detection**: A precise, color-based detection within a constrained search area.
-2.  **Expanded Search**: A secondary search in a slightly larger region to find faint edge pixels.
-3.  **Component Merging**: A final pass to combine all detected components into a single, unified mask.
-
-This multi-stage approach was developed after several iterations to solve the problem of incomplete masks, which left small but noticeable artifacts. You can read more about the development journey in `docs/DEVELOPMENT.md`.
-
 ## 📚 Documentation
 
 -   **[Architecture](docs/ARCHITECTURE.md)**: A detailed look at the system components and data flow.
--   **[Development History](docs/DEVELOPMENT.md)**: The story of how the V3 detector was built, including lessons learned from previous versions.
+-   **[Development History](docs/DEVELOPMENT.md)**: The story of how the V3 detector was built.
 -   **[Examples](examples/)**: Basic and advanced usage scripts.
 
 ## 📊 Performance
@@ -109,7 +131,6 @@ Based on a test set of 72 images with consistent watermarks:
 | **False Positives** | **0%** |
 | **Residue/Artifacts** | **0%** |
 | **Avg. Time (CPU)** | 5.8 sec/image |
-| **Avg. Time (GPU)** | 1.5 sec/image |
 
 ## 🤝 Contributing
 
