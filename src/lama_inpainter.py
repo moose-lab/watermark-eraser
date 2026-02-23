@@ -107,7 +107,7 @@ class LamaInpainter:
         print(f"Saved inpainted image to {output_path}")
         return result
     
-    def _to_pil_image(self, 
+    def _to_pil_image(self,
                       image: Union[np.ndarray, Image.Image, str, Path]) -> Image.Image:
         """Convert various image formats to PIL Image"""
         if isinstance(image, (str, Path)):
@@ -119,9 +119,15 @@ class LamaInpainter:
             if len(image.shape) == 2:  # Grayscale
                 return Image.fromarray(image).convert('RGB')
             elif len(image.shape) == 3:
-                if image.shape[2] == 3:  # RGB
+                if image.shape[2] == 3:
+                    # OpenCV uses BGR, PIL uses RGB - convert!
+                    import cv2
+                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                     return Image.fromarray(image, 'RGB')
                 elif image.shape[2] == 4:  # RGBA
+                    # OpenCV uses BGRA, PIL uses RGBA - convert!
+                    import cv2
+                    image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
                     return Image.fromarray(image, 'RGBA').convert('RGB')
         elif isinstance(image, Image.Image):
             return image.convert('RGB')
